@@ -946,8 +946,8 @@
         }
 
         function submitToSpreadsheet(finalScore, isPassed) {
-            // URL Google Apps Script Web App (User perlu mengganti ini)
-            const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+            // URL Google Apps Script Web App
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbz_VdIXrfDiNtCJNFIyOlknOevZeQTkX1JxaDuIPT18diMddbwcjJRZ3bFEHlKXVO-3gg/exec';
             
             const data = {
                 timestamp: new Date().toLocaleString(),
@@ -959,8 +959,8 @@
 
             console.log("Submitting Result:", data);
 
-            if (scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-                console.warn("Spreadsheet URL belum dikonfigurasi. Data tidak terkirim secara nyata.");
+            if (scriptURL === '') {
+                console.warn("Spreadsheet URL belum dikonfigurasi.");
                 return;
             }
 
