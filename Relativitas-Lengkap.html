@@ -305,13 +305,13 @@
     <!-- Sticky Navbar -->
     <nav class="glass-nav sticky top-0 z-50 shadow-md overflow-x-auto whitespace-nowrap hide-scrollbar">
         <div class="max-w-6xl mx-auto px-4 flex md:justify-center">
-            <a href="#bab1" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-book-open"></i> Bab 1</a>
-            <a href="#bab2" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-clock"></i> Bab 2</a>
-            <a href="#bab3" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-ruler-horizontal"></i> Bab 3</a>
-            <a href="#bab4" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-bolt"></i> Bab 4</a>
-            <a href="#bab5" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-meteor"></i> Bab 5</a>
-            <a href="#bab6" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-satellite"></i> Bab 6</a>
-            <a href="#interaktif" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-gamepad"></i> Interaktif</a>
+            <a href="#bab1" onclick="scrollToSection(event, 'bab1')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-book-open"></i> Bab 1</a>
+            <a href="#bab2" onclick="scrollToSection(event, 'bab2')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-clock"></i> Bab 2</a>
+            <a href="#bab3" onclick="scrollToSection(event, 'bab3')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-ruler-horizontal"></i> Bab 3</a>
+            <a href="#bab4" onclick="scrollToSection(event, 'bab4')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-bolt"></i> Bab 4</a>
+            <a href="#bab5" onclick="scrollToSection(event, 'bab5')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-meteor"></i> Bab 5</a>
+            <a href="#bab6" onclick="scrollToSection(event, 'bab6')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-satellite"></i> Bab 6</a>
+            <a href="#interaktif" onclick="scrollToSection(event, 'interaktif')" class="nav-link text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-gamepad"></i> Interaktif</a>
         </div>
     </nav>
 
@@ -1160,15 +1160,39 @@
         }
 
         /* === MERGED FROM enhancements.js === */
-        window.addEventListener('load', () => {
+        // Canva-optimized loading trigger
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loading-screen');
+            // Sedikit delay agar transisi mulus
             setTimeout(() => {
-                const loader = document.getElementById('loading-screen');
                 if (loader) {
                     loader.classList.add('hidden');
                     setTimeout(() => loader.remove(), 800);
                 }
-            }, 2500);
+            }, 1500);
         });
+
+        // Iframe-friendly navigation
+        function scrollToSection(event, id) {
+            event.preventDefault();
+            const element = document.getElementById(id);
+            if (element) {
+                // Gunakan scrollIntoView yang lebih andal di dalam iframe
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Update URL tanpa reload
+                history.pushState(null, null, '#' + id);
+                
+                // Update active state di nav
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('bg-secondary', 'text-dark');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('bg-secondary', 'text-dark');
+                    }
+                });
+            }
+        }
 
         function generateStarfield() {
             const container = document.getElementById('starfield');
@@ -1250,7 +1274,7 @@
             generateStarfield();
             generateHeaderParticles();
             initScrollReveal();
-            initActiveNav();
+            // initActiveNav(); // Dimatikan sementara karena sering konflik di iframe Canva
         });
     </script>
 </body>
