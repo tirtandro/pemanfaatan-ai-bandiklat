@@ -946,32 +946,30 @@
         }
 
         function submitToSpreadsheet(finalScore, isPassed) {
-            // URL Google Apps Script Web App
             const scriptURL = 'https://script.google.com/macros/s/AKfycbz_VdIXrfDiNtCJNFIyOlknOevZeQTkX1JxaDuIPT18diMddbwcjJRZ3bFEHlKXVO-3gg/exec';
             
-            const data = {
+            const queryParams = new URLSearchParams({
                 timestamp: new Date().toLocaleString(),
                 nama: userData.name,
                 kelas: userData.class,
                 skor: finalScore,
                 keterangan: isPassed ? "LULUS" : "TIDAK LULUS"
-            };
+            });
 
-            console.log("Submitting Result:", data);
+            const finalURL = `${scriptURL}?${queryParams.toString()}`;
+            console.log("Submitting to:", finalURL);
 
-            if (scriptURL === '') {
+            if (scriptURL.includes('YOUR_GOOGLE_SCRIPT_URL_HERE')) {
                 console.warn("Spreadsheet URL belum dikonfigurasi.");
                 return;
             }
 
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', // Penting untuk Apps Script
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+            // Menggunakan fetch dengan mode no-cors untuk menghindari masalah pre-flight
+            fetch(finalURL, {
+                method: 'GET',
+                mode: 'no-cors'
             })
-            .then(() => console.log("Success submitting to spreadsheet"))
+            .then(() => console.log("Data berhasil dikirim ke Spreadsheet (via GET)"))
             .catch(error => console.error('Error!', error.message));
         }
 
