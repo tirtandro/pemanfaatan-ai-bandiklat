@@ -1,0 +1,246 @@
+/* ============================================
+   LOADING SCREEN
+   ============================================ */
+#loading-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0f0c29 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#loading-screen.hidden { opacity: 0; visibility: hidden; }
+
+.loader-atom { position: relative; width: 160px; height: 160px; }
+.loader-nucleus {
+    position: absolute; top: 50%; left: 50%;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: radial-gradient(circle, #ffb300, #ff8f00);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 30px #ffb300, 0 0 60px rgba(255,179,0,0.4);
+    animation: nucleusPulse 1.5s ease-in-out infinite;
+}
+.loader-orbit {
+    position: absolute; inset: 0;
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    border-radius: 50%;
+}
+.loader-orbit:nth-child(2) { transform: rotateZ(0deg) rotateX(65deg); }
+.loader-orbit:nth-child(3) { transform: rotateZ(60deg) rotateX(65deg); }
+.loader-orbit:nth-child(4) { transform: rotateZ(120deg) rotateX(65deg); }
+
+.loader-electron {
+    position: absolute; width: 10px; height: 10px;
+    background: #38bdf8; border-radius: 50%;
+    box-shadow: 0 0 12px #38bdf8, 0 0 24px rgba(56,189,248,0.4);
+    top: -5px; left: 50%; transform: translateX(-50%);
+}
+.loader-orbit:nth-child(2) { animation: orbitSpin 2s linear infinite; }
+.loader-orbit:nth-child(3) { animation: orbitSpin 2.5s linear infinite reverse; }
+.loader-orbit:nth-child(4) { animation: orbitSpin 3s linear infinite; }
+
+@keyframes orbitSpin { to { transform: rotateZ(360deg) rotateX(65deg); } }
+.loader-orbit:nth-child(3) { animation-name: orbitSpin2; }
+@keyframes orbitSpin2 { from { transform: rotateZ(60deg) rotateX(65deg); } to { transform: rotateZ(420deg) rotateX(65deg); } }
+.loader-orbit:nth-child(4) { animation-name: orbitSpin3; }
+@keyframes orbitSpin3 { from { transform: rotateZ(120deg) rotateX(65deg); } to { transform: rotateZ(480deg) rotateX(65deg); } }
+
+@keyframes nucleusPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.15); }
+}
+
+.loader-title {
+    font-family: 'Inter', sans-serif; color: #ffb300;
+    font-size: 2rem; font-weight: 700;
+    margin-top: 32px; letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(255,179,0,0.5);
+    animation: titleGlow 2s ease-in-out infinite alternate;
+}
+.loader-subtitle {
+    font-family: 'Inter', sans-serif; color: rgba(255,255,255,0.6);
+    font-size: 0.85rem; margin-top: 8px; letter-spacing: 2px;
+}
+.loader-bar-track {
+    width: 200px; height: 3px; background: rgba(255,255,255,0.1);
+    border-radius: 3px; margin-top: 24px; overflow: hidden;
+}
+.loader-bar-fill {
+    height: 100%; width: 0%; border-radius: 3px;
+    background: linear-gradient(90deg, #ffb300, #38bdf8);
+    animation: loaderProgress 2.2s ease-in-out forwards;
+}
+@keyframes loaderProgress { to { width: 100%; } }
+@keyframes titleGlow {
+    from { text-shadow: 0 0 20px rgba(255,179,0,0.3); }
+    to { text-shadow: 0 0 40px rgba(255,179,0,0.7), 0 0 80px rgba(255,179,0,0.2); }
+}
+
+/* ============================================
+   STARFIELD BACKGROUND
+   ============================================ */
+body { 
+    background: linear-gradient(180deg, #0a0a1a 0%, #111133 40%, #1a1a3e 100%) !important;
+    background-attachment: fixed !important; 
+    position: relative; z-index: 1; 
+    min-height: 100vh;
+}
+.starfield {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; overflow: hidden;
+}
+.star {
+    position: absolute; border-radius: 50%; background: white;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+    0% { opacity: var(--o1); transform: scale(1); }
+    100% { opacity: var(--o2); transform: scale(1.3); }
+}
+
+/* ============================================
+   SCROLL REVEAL ANIMATIONS
+   ============================================ */
+.reveal {
+    opacity: 0; transform: translateY(50px);
+    transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.active { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ============================================
+   PARALLAX SPACE DIVIDERS
+   ============================================ */
+.space-divider {
+    position: relative; height: 120px; overflow: hidden;
+    background: linear-gradient(180deg, transparent, rgba(10,10,42,0.8), transparent);
+    display: flex; align-items: center; justify-content: center;
+}
+.space-divider svg { opacity: 0.15; }
+
+/* ============================================
+   SVG SECTION ANIMATIONS
+   ============================================ */
+/* Wave animation for Bab 1 */
+.svg-wave-container {
+    overflow: hidden; height: 60px; position: relative; margin: 16px 0;
+    border-radius: 12px; background: rgba(26,35,126,0.05);
+}
+.svg-wave {
+    position: absolute; top: 0; left: 0;
+    width: 200%; height: 100%;
+    animation: waveScroll 3s linear infinite;
+}
+@keyframes waveScroll { to { transform: translateX(-50%); } }
+
+/* Clock animation for Bab 2 */
+.svg-clock-hand { transform-origin: 50px 50px; animation: clockTick 4s linear infinite; }
+.svg-clock-hand-slow { transform-origin: 50px 50px; animation: clockTick 12s linear infinite; }
+@keyframes clockTick { to { transform: rotate(360deg); } }
+
+/* Energy burst for Bab 4 */
+.svg-energy-ring { animation: energyPulse 2s ease-in-out infinite; transform-origin: center; }
+@keyframes energyPulse {
+    0%, 100% { transform: scale(0.8); opacity: 0.4; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+.svg-energy-ring:nth-child(2) { animation-delay: 0.3s; }
+.svg-energy-ring:nth-child(3) { animation-delay: 0.6s; }
+
+/* Particle trail for Bab 5 */
+.svg-particle-move { animation: particleTrail 2.5s linear infinite; }
+@keyframes particleTrail {
+    0% { transform: translateX(-100px); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(350px); opacity: 0; }
+}
+.svg-trail { animation: trailFade 2.5s linear infinite; }
+@keyframes trailFade {
+    0% { opacity: 0; stroke-dashoffset: 300; }
+    20% { opacity: 0.6; }
+    100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+/* Satellite orbit for Bab 6 */
+.svg-satellite-orbit { animation: satOrbit 6s linear infinite; transform-origin: 150px 100px; }
+@keyframes satOrbit { to { transform: rotate(360deg); } }
+
+/* Muon fall for Bab 6 */
+.svg-muon-fall { animation: muonDrop 3s ease-in infinite; }
+@keyframes muonDrop {
+    0% { transform: translateY(-20px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(180px); opacity: 0; }
+}
+
+/* ============================================
+   ENHANCED VISUAL POLISH
+   ============================================ */
+main, header, footer, nav { position: relative; z-index: 1; }
+main, header, footer, nav { position: relative; z-index: 1; }
+
+/* Glassmorphism Nav */
+nav.glass-nav {
+    background: rgba(47,54,64,0.75) !important;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Glow formulas */
+.formula-glow {
+    position: relative;
+    box-shadow: 0 0 20px rgba(26,35,126,0.08), inset 0 0 20px rgba(26,35,126,0.03);
+    transition: box-shadow 0.4s ease;
+}
+.formula-glow:hover {
+    box-shadow: 0 0 30px rgba(26,35,126,0.15), inset 0 0 30px rgba(26,35,126,0.05);
+}
+
+/* Section cards on dark bg */
+section.content-card {
+    background: rgba(255,255,255,0.92) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Enhanced flip card hover */
+.group:hover .group-hover\:rotate-y-180 {
+    transform: rotateY(180deg);
+    box-shadow: 0 12px 30px rgba(26,35,126,0.3);
+}
+
+/* Footer on dark bg */
+footer { background: rgba(47,54,64,0.9) !important; backdrop-filter: blur(12px); }
+
+/* Header enhanced */
+header.enhanced-header {
+    background: linear-gradient(135deg, #0d1147 0%, #1a237e 50%, #283593 100%) !important;
+    border-bottom: none !important;
+}
+
+/* Floating particles in header */
+.header-particle {
+    position: absolute; border-radius: 50%; background: rgba(255,179,0,0.3);
+    animation: floatParticle var(--dur) ease-in-out infinite alternate;
+}
+@keyframes floatParticle {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(var(--dx), var(--dy)) scale(var(--s)); }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0a0a2e; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ffb300, #1a237e); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #ffc107, #283593); }
+
+/* Hide horizontal scrollbar on nav */
+.hide-scrollbar::-webkit-scrollbar { height: 0; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Smooth section borders */
+section { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+section:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }

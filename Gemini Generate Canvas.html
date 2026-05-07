@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Fisika - Teori Relativitas Khusus Einstein</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#1a237e', secondary: '#ffb300', light: '#f5f6fa', dark: '#2f3640' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhancements.css">
+
+    <!-- MathJax for Formulas -->
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #f5f6fa; }
+        
+        /* Light Clock Animation */
+        .light-clock-container { height: 200px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .mirror { width: 120px; height: 10px; background: #1a237e; border-radius: 5px; position: absolute; }
+        .mirror.top { top: 20px; }
+        .mirror.bottom { bottom: 20px; }
+        .photon { width: 16px; height: 16px; background: #ffb300; border-radius: 50%; position: absolute; box-shadow: 0 0 10px #ffb300; animation: bounce 2s infinite linear; }
+        
+        @keyframes bounce {
+            0% { bottom: 30px; }
+            50% { bottom: 160px; }
+            100% { bottom: 30px; }
+        }
+
+        /* Moving Light Clock Animation */
+        .moving-clock { animation: moveRight 4s infinite linear alternate; position: relative; width: 120px; height: 100%; }
+        @keyframes moveRight {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        /* Length Contraction Rocket */
+        #rocket-container { width: 100%; max-width: 500px; margin: 0 auto; background: #e2e8f0; border-radius: 20px; padding: 10px; overflow: hidden; }
+        #rocket-body { height: 60px; background: linear-gradient(90deg, #1a237e, #4c51bf); border-radius: 30px 10px 10px 30px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; position: relative; box-shadow: inset -5px 0 15px rgba(0,0,0,0.2); }
+        #rocket-body::after { content: '🚀'; position: absolute; right: 10px; font-size: 1.5rem; }
+
+        /* Flip Cards */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+
+        /* Quiz Options */
+        .quiz-option { transition: all 0.2s; }
+        .quiz-option:hover { background-color: #e0e7ff; border-color: #1a237e; }
+        .quiz-option.selected { background-color: #c7d2fe; border-color: #1a237e; font-weight: 600; }
+        .quiz-option.correct { background-color: #bbf7d0; border-color: #16a34a; }
+        .quiz-option.wrong { background-color: #fecdd3; border-color: #e11d48; }
+
+        /* Highlight text */
+        .highlight { background: linear-gradient(120deg, #ffb300 0%, #ffb300 100%); background-repeat: no-repeat; background-size: 100% 30%; background-position: 0 88%; }
+    </style>
+</head>
+<body class="text-dark">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-atom" style="perspective:800px">
+            <div class="loader-nucleus"></div>
+            <div class="loader-orbit"><div class="loader-electron"></div></div>
+            <div class="loader-orbit"><div class="loader-electron"></div></div>
+            <div class="loader-orbit"><div class="loader-electron"></div></div>
+        </div>
+        <div class="loader-title">E = mc²</div>
+        <div class="loader-subtitle">MEMUAT MATERI RELATIVITAS</div>
+        <div class="loader-bar-track"><div class="loader-bar-fill"></div></div>
+    </div>
+
+    <!-- Starfield Background -->
+    <div id="starfield" class="starfield"></div>
+
+    <!-- Header -->
+    <header class="enhanced-header text-white py-12 px-4 shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+        </div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4"><i class="fa-solid fa-atom text-secondary animate-pulse"></i> Teori Relativitas Khusus Einstein</h1>
+            <h2 class="text-xl md:text-2xl font-light mb-6">Mata Pelajaran: Fisika | Kelas XII / Genap</h2>
+            <div class="inline-block bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 text-left md:text-center">
+                <p class="text-sm md:text-base"><i class="fa-solid fa-user-pen text-secondary w-6"></i> Disusun oleh: <strong>Tirtandro Meda, S.Pd. M.Pd.</strong></p>
+                <p class="text-sm md:text-base"><i class="fa-solid fa-school text-secondary w-6"></i> SMA Negeri 2 Wates, Kulon Progo, DIY</p>
+                <p class="text-sm md:text-base"><i class="fa-solid fa-calendar-alt text-secondary w-6"></i> Tahun Ajaran 2025/2026</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sticky Navbar -->
+    <nav class="glass-nav sticky top-0 z-50 shadow-md overflow-x-auto whitespace-nowrap hide-scrollbar">
+        <div class="max-w-6xl mx-auto px-4 flex md:justify-center">
+            <a href="#bab1" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-book-open"></i> Bab 1</a>
+            <a href="#bab2" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-clock"></i> Bab 2</a>
+            <a href="#bab3" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-ruler-horizontal"></i> Bab 3</a>
+            <a href="#bab4" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-bolt"></i> Bab 4</a>
+            <a href="#bab5" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-meteor"></i> Bab 5</a>
+            <a href="#bab6" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-satellite"></i> Bab 6</a>
+            <a href="#interaktif" class="text-white hover:bg-secondary hover:text-dark px-4 py-3 font-semibold transition-colors duration-200"><i class="fa-solid fa-gamepad"></i> Interaktif</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- Standar Kurikulum -->
+        <section class="content-card rounded-2xl p-6 md:p-8 shadow-sm border-l-8 border-primary reveal">
+            <h2 class="text-2xl font-bold text-primary mb-4 border-b-2 border-gray-100 pb-2"><i class="fa-solid fa-bullseye"></i> Standar Kurikulum Merdeka (Fase F)</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-dark">Capaian & Tujuan Pembelajaran</h3>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                        <li>Menganalisis kelemahan fisika klasik & postulat Einstein.</li>
+                        <li>Memformulasikan besaran relativistik (waktu, panjang, massa, momentum, energi).</li>
+                        <li>Mengevaluasi penerapan relativitas khusus dalam teknologi (misal: GPS).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-dark">Dimensi Profil Lulusan</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start"><i class="fa-solid fa-brain text-secondary mt-1 mr-2"></i> <span><strong>Bernalar Kritis:</strong> Memahami logika paradoks kembar dan penurunan rumus.</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-lightbulb text-secondary mt-1 mr-2"></i> <span><strong>Kreatif:</strong> Menyelesaikan ragam persoalan relativistik dan aplikasinya.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- BAB 1 -->
+        <section id="bab1" class="content-card rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><span class="highlight">Bab 1 — Pendahuluan Relativitas</span></h2>
+            
+            <!-- SVG: Electromagnetic Wave Animation -->
+            <div class="svg-wave-container reveal reveal-delay-1">
+                <svg class="svg-wave" viewBox="0 0 800 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,30 Q25,5 50,30 Q75,55 100,30 Q125,5 150,30 Q175,55 200,30 Q225,5 250,30 Q275,55 300,30 Q325,5 350,30 Q375,55 400,30 Q425,5 450,30 Q475,55 500,30 Q525,5 550,30 Q575,55 600,30 Q625,5 650,30 Q675,55 700,30 Q725,5 750,30 Q775,55 800,30" stroke="#ffb300" fill="none" stroke-width="2.5" opacity="0.7"/>
+                    <path d="M0,30 Q25,10 50,30 Q75,50 100,30 Q125,10 150,30 Q175,50 200,30 Q225,10 250,30 Q275,50 300,30 Q325,10 350,30 Q375,50 400,30 Q425,10 450,30 Q475,50 500,30 Q525,10 550,30 Q575,50 600,30 Q625,10 650,30 Q675,50 700,30 Q725,10 750,30 Q775,50 800,30" stroke="#6366f1" fill="none" stroke-width="1.5" opacity="0.4"/>
+                </svg>
+            </div>
+
+            <h3 class="text-xl font-bold mb-3"><i class="fa-solid fa-timeline text-secondary"></i> Sejarah Singkat & Krisis Fisika Klasik</h3>
+            <p class="mb-4 text-gray-700">Fisika klasik berasumsi bahwa ruang dan waktu bersifat mutlak (Galileo & Newton). Ketika teori gelombang elektromagnetik Maxwell muncul, ilmuwan percaya bahwa cahaya membutuhkan medium rambat yang disebut <strong>ether</strong>. Namun, eksperimen <strong>Michelson-Morley (1887)</strong> secara mengejutkan gagal mendeteksi adanya ether ini, membuktikan bahwa kecepatan cahaya selalu konstan terlepas dari arah geraknya terhadap bumi.</p>
+
+            <div class="bg-indigo-50 border-l-4 border-primary p-6 rounded-r-lg my-6 reveal reveal-delay-2">
+                <h3 class="text-xl font-bold text-primary mb-4"><i class="fa-solid fa-lightbulb text-secondary"></i> Dua Postulat Einstein (1905)</h3>
+                <ol class="list-decimal pl-5 space-y-3 text-gray-800 text-lg">
+                    <li><strong>Postulat 1 (Prinsip Relativitas):</strong> Hukum-hukum fisika memiliki bentuk yang sama pada semua kerangka acuan inersial (kerangka yang bergerak dengan kecepatan konstan).</li>
+                    <li><strong>Postulat 2 (Konstannya Kecepatan Cahaya):</strong> Kecepatan cahaya di ruang hampa bernilai sama untuk semua pengamat ($c = 3 \times 10^8$ m/s), tidak bergantung pada gerak pengamat maupun sumber cahaya.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Parallax Divider 1 -->
+        <div class="space-divider">
+            <svg width="300" height="60" viewBox="0 0 300 60" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="150" cy="30" r="4" fill="#ffb300" opacity="0.6"><animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/></circle>
+                <circle cx="150" cy="30" r="20" fill="none" stroke="#6366f1" stroke-width="0.5" opacity="0.3"><animate attributeName="r" values="15;25;15" dur="2s" repeatCount="indefinite"/></circle>
+            </svg>
+        </div>
+
+        <!-- BAB 2 -->
+        <section id="bab2" class="content-card rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><span class="highlight">Bab 2 — Dilatasi Waktu (Time Dilation)</span></h2>
+            
+            <!-- SVG: Two Clocks Comparison -->
+            <div class="flex justify-center gap-8 mb-4 reveal reveal-delay-1">
+                <div class="text-center">
+                    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#1a237e" stroke-width="3"/>
+                        <circle cx="50" cy="50" r="3" fill="#1a237e"/>
+                        <line x1="50" y1="50" x2="50" y2="15" stroke="#ffb300" stroke-width="2.5" stroke-linecap="round" class="svg-clock-hand"/>
+                        <line x1="50" y1="50" x2="75" y2="50" stroke="#1a237e" stroke-width="1.5" stroke-linecap="round" class="svg-clock-hand" style="animation-duration:1s"/>
+                    </svg>
+                    <p class="text-xs mt-1 font-semibold text-gray-600">Jam Normal</p>
+                </div>
+                <div class="text-center">
+                    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#6366f1" stroke-width="3" stroke-dasharray="5,3"/>
+                        <circle cx="50" cy="50" r="3" fill="#6366f1"/>
+                        <line x1="50" y1="50" x2="50" y2="15" stroke="#ffb300" stroke-width="2.5" stroke-linecap="round" class="svg-clock-hand-slow"/>
+                        <line x1="50" y1="50" x2="75" y2="50" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" class="svg-clock-hand-slow" style="animation-duration:4s"/>
+                    </svg>
+                    <p class="text-xs mt-1 font-semibold text-gray-600">Jam Relativistik (lambat)</p>
+                </div>
+            </div>
+            <p class="mb-4 text-gray-700">Akibat kecepatan cahaya yang mutlak, waktu tidak lagi mutlak. Waktu akan berjalan lebih lambat bagi objek yang bergerak mendekati kecepatan cahaya menurut pengamat yang diam.</p>
+            
+            <div class="bg-gray-50 rounded-xl p-6 mb-6 border border-gray-200">
+                <h4 class="text-center font-bold text-lg mb-4">Ilustrasi Jam Cahaya (Light Clock)</h4>
+                <div class="grid md:grid-cols-2 gap-8 text-center">
+                    <div>
+                        <p class="mb-2 font-semibold text-gray-600">Pengamat Diam di Pesawat</p>
+                        <div class="light-clock-container bg-white border rounded-lg">
+                            <div class="mirror top"></div>
+                            <div class="photon"></div>
+                            <div class="mirror bottom"></div>
+                        </div>
+                        <p class="text-sm mt-2">Lintasan foton lurus ($\Delta t_0$)</p>
+                    </div>
+                    <div>
+                        <p class="mb-2 font-semibold text-gray-600">Pengamat Diam di Bumi</p>
+                        <div class="light-clock-container bg-white border rounded-lg overflow-hidden">
+                            <div class="moving-clock mx-auto">
+                                <div class="mirror top"></div>
+                                <div class="photon"></div>
+                                <div class="mirror bottom"></div>
+                            </div>
+                        </div>
+                        <p class="text-sm mt-2">Lintasan foton diagonal ($\Delta t$). Karena $c$ tetap, jarak lebih jauh berarti waktu ($\Delta t$) harus memuai.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 rounded-lg p-6 mb-6 text-center formula-glow">
+                <h3 class="font-bold text-gray-700 mb-2">Rumus Dilatasi Waktu</h3>
+                <div class="text-2xl md:text-3xl font-bold text-primary overflow-x-auto">
+                    $$ \Delta t = \frac{\Delta t_0}{\sqrt{1 - \frac{v^2}{c^2}}} = \gamma \Delta t_0 $$
+                </div>
+                <div class="text-left mt-4 grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                    <ul class="list-disc pl-5">
+                        <li>$\Delta t$ = Waktu yang diukur oleh pengamat yang bergerak relatif (waktu memuai)</li>
+                        <li>$\Delta t_0$ = Waktu proper (waktu yang diukur pengamat yang diam terhadap kejadian)</li>
+                    </ul>
+                    <ul class="list-disc pl-5">
+                        <li>$v$ = Kecepatan benda (m/s)</li>
+                        <li>$c$ = Kecepatan cahaya ($3 \times 10^8$ m/s)</li>
+                        <li>$\gamma$ = Faktor Lorentz ($\gamma \ge 1$)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contoh Soal -->
+            <div class="space-y-4">
+                <details class="group bg-white border border-gray-200 rounded-lg open:shadow-md transition-all">
+                    <summary class="font-semibold p-4 cursor-pointer bg-gray-50 group-open:bg-primary group-open:text-white rounded-t-lg transition-colors">
+                        Contoh Soal (Mudah) - Klik untuk melihat pembahasan
+                    </summary>
+                    <div class="p-4 border-t border-gray-200 text-gray-700">
+                        <p><strong>Soal:</strong> Seorang astronot melakukan perjalanan dengan pesawat luar angkasa berkecepatan $0.8c$. Jika perjalanan memakan waktu 10 tahun menurut jam di dalam pesawat, berapa lama waktu perjalanan tersebut menurut pengamat di Bumi?</p>
+                        <hr class="my-3">
+                        <p><strong>Pembahasan:</strong></p>
+                        <p>Diketahui: $v = 0.8c$, $\Delta t_0 = 10$ tahun.</p>
+                        <p>Ditanya: $\Delta t$ ?</p>
+                        <div class="overflow-x-auto">
+                            $$ \gamma = \frac{1}{\sqrt{1 - 0.8^2}} = \frac{1}{\sqrt{1 - 0.64}} = \frac{1}{\sqrt{0.36}} = \frac{1}{0.6} = \frac{5}{3} $$
+                            $$ \Delta t = \gamma \cdot \Delta t_0 = \frac{5}{3} \cdot 10 = 16.67 \text{ tahun} $$
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- Parallax Divider 2 -->
+        <div class="space-divider">
+            <svg width="400" height="40" viewBox="0 0 400 40" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(99,102,241,0.15)" stroke-width="1"/>
+                <circle cx="100" cy="20" r="2" fill="#ffb300" opacity="0.5"/>
+                <circle cx="200" cy="20" r="3" fill="#ffb300" opacity="0.7"/>
+                <circle cx="300" cy="20" r="2" fill="#ffb300" opacity="0.5"/>
+            </svg>
+        </div>
+
+        <!-- BAB 3 -->
+        <section id="bab3" class="content-card rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><span class="highlight">Bab 3 — Kontraksi Panjang (Length Contraction)</span></h2>
+            <p class="mb-4 text-gray-700">Panjang benda yang bergerak relatif terhadap pengamat akan teramati lebih pendek dari panjang aslinya, diukur searah dengan gerak benda. Ini adalah konsekuensi logis dari dilatasi waktu agar kecepatan cahaya tetap konstan.</p>
+
+            <div class="bg-gray-50 rounded-xl p-6 mb-6 border border-gray-200 text-center">
+                <h4 class="font-bold text-lg mb-4">Visualisasi Kontraksi Panjang</h4>
+                <div class="mb-4">
+                    <label for="rocket-speed" class="block text-sm font-medium text-gray-700 mb-2">Kecepatan Pesawat ($v$): <span id="speed-display" class="font-bold text-primary">0 c</span></label>
+                    <input type="range" id="rocket-speed" min="0" max="0.99" step="0.01" value="0" class="w-full max-w-md cursor-pointer">
+                </div>
+                <div id="rocket-container">
+                    <div id="rocket-body" style="width: 100%;">
+                        <span class="z-10 text-sm md:text-base">Panjang: <span id="length-display">100</span>% $L_0$</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">*Cobalah geser slider hingga mendekati kecepatan cahaya (1c).</p>
+            </div>
+
+            <div class="bg-blue-50 rounded-lg p-6 mb-6 text-center formula-glow">
+                <h3 class="font-bold text-gray-700 mb-2">Rumus Kontraksi Panjang</h3>
+                <div class="text-2xl md:text-3xl font-bold text-primary overflow-x-auto">
+                    $$ L = L_0 \sqrt{1 - \frac{v^2}{c^2}} = \frac{L_0}{\gamma} $$
+                </div>
+                <p class="mt-4 text-sm text-gray-700">$L$ = Panjang teramati benda yang bergerak, $L_0$ = Panjang proper (panjang benda saat diam relatif terhadap pengamat).</p>
+            </div>
+            
+            <div class="space-y-4">
+                <details class="group bg-white border border-gray-200 rounded-lg open:shadow-md transition-all">
+                    <summary class="font-semibold p-4 cursor-pointer bg-gray-50 group-open:bg-primary group-open:text-white rounded-t-lg transition-colors">
+                        Contoh Soal (Sedang) - Klik untuk melihat pembahasan
+                    </summary>
+                    <div class="p-4 border-t border-gray-200 text-gray-700">
+                        <p><strong>Soal:</strong> Sebuah pesawat antariksa memiliki panjang proper 100 meter. Berapa kecepatan pesawat tersebut agar panjangnya yang teramati oleh pengamat di stasiun ruang angkasa menjadi 60 meter?</p>
+                        <hr class="my-3">
+                        <p><strong>Pembahasan:</strong></p>
+                        <p>Diketahui: $L_0 = 100$ m, $L = 60$ m.</p>
+                        <div class="overflow-x-auto">
+                            $$ L = L_0 \sqrt{1 - \frac{v^2}{c^2}} $$
+                            $$ 60 = 100 \sqrt{1 - \frac{v^2}{c^2}} $$
+                            $$ 0.6 = \sqrt{1 - \frac{v^2}{c^2}} $$
+                            Kuadratkan kedua ruas:
+                            $$ 0.36 = 1 - \frac{v^2}{c^2} $$
+                            $$ \frac{v^2}{c^2} = 1 - 0.36 = 0.64 $$
+                            $$ v = \sqrt{0.64} c = 0.8c $$
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- Parallax Divider 3 -->
+        <div class="space-divider">
+            <svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="30" r="8" fill="none" stroke="#ffb300" stroke-width="1" class="svg-energy-ring"/>
+                <circle cx="100" cy="30" r="16" fill="none" stroke="#6366f1" stroke-width="0.5" class="svg-energy-ring"/>
+                <circle cx="100" cy="30" r="24" fill="none" stroke="#ffb300" stroke-width="0.3" class="svg-energy-ring"/>
+            </svg>
+        </div>
+
+        <!-- BAB 4 -->
+        <section id="bab4" class="content-card rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><span class="highlight">Bab 4 — Kesetaraan Massa–Energi</span></h2>
+                <!-- SVG: Energy Burst -->
+                <div class="flex justify-center mb-4">
+                    <svg width="100" height="80" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="40" r="10" fill="#ffb300" opacity="0.8"><animate attributeName="r" values="8;12;8" dur="1.5s" repeatCount="indefinite"/></circle>
+                        <circle cx="50" cy="40" r="20" fill="none" stroke="#ffb300" stroke-width="1" class="svg-energy-ring"/>
+                        <circle cx="50" cy="40" r="30" fill="none" stroke="#6366f1" stroke-width="0.5" class="svg-energy-ring"/>
+                        <text x="50" y="70" text-anchor="middle" font-size="10" fill="#1a237e" font-weight="bold" font-family="Inter">E = mc²</text>
+                    </svg>
+                </div>
+                <p class="text-gray-700 mb-4 text-sm">Einstein menyatakan massa benda meningkat seiring kecepatannya bertambah, dan massa serta energi setara.</p>
+                <ul class="space-y-3 text-sm">
+                    <li class="bg-gray-50 p-3 rounded-lg"><strong>Massa Relativistik:</strong> $$ m = \frac{m_0}{\sqrt{1 - v^2/c^2}} = \gamma m_0 $$</li>
+                    <li class="bg-gray-50 p-3 rounded-lg"><strong>Energi Diam:</strong> $$ E_0 = m_0 c^2 $$</li>
+                    <li class="bg-gray-50 p-3 rounded-lg border-l-4 border-secondary"><strong>Energi Total:</strong> $$ E = mc^2 = \gamma m_0 c^2 $$</li>
+                    <li class="bg-gray-50 p-3 rounded-lg"><strong>Energi Kinetik Relativistik:</strong> $$ EK = E - E_0 = (\gamma - 1)m_0 c^2 $$</li>
+                </ul>
+                <div class="mt-4 text-xs text-gray-500">
+                    <strong>Aplikasi:</strong> Reaksi nuklir (fisi/fusi) di PLTN dan PET Scan di dunia medis beroperasi berdasarkan konversi massa ke energi ini.
+                </div>
+            </section>
+
+        <!-- Parallax Divider 3.5 -->
+        <div class="space-divider">
+            <svg width="200" height="40" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="20" r="4" fill="#38bdf8" opacity="0.6"/>
+                <line x1="0" y1="20" x2="200" y2="20" stroke="#38bdf8" stroke-width="0.5" stroke-dasharray="2,6" opacity="0.4"/>
+            </svg>
+        </div>
+
+        <!-- BAB 5 -->
+        <section id="bab5" class="content-card rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><span class="highlight">Bab 5 — Momentum Relativistik</span></h2>
+                <!-- SVG: Particle with momentum trail -->
+                <div class="flex justify-center mb-4" style="overflow:hidden;height:40px;position:relative">
+                    <svg width="300" height="40" viewBox="0 0 300 40" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" y1="20" x2="280" y2="20" stroke="#6366f1" stroke-width="0.5" stroke-dasharray="4,4" opacity="0.3"/>
+                        <circle r="6" fill="#ffb300" class="svg-particle-move"><animateMotion path="M-50,20 L350,20" dur="2.5s" repeatCount="indefinite"/></circle>
+                        <circle r="3" fill="#ffb300" opacity="0.4" class="svg-particle-move" style="animation-delay:0.3s"><animateMotion path="M-50,20 L350,20" dur="2.5s" repeatCount="indefinite" begin="0.3s"/></circle>
+                    </svg>
+                </div>
+                <p class="text-gray-700 mb-4 text-sm">Momentum klasik ($p = mv$) tidak lagi berlaku pada kecepatan mendekati $c$ karena massa menjadi tidak konstan.</p>
+                <div class="bg-gray-50 p-4 rounded-lg text-center overflow-x-auto mb-4">
+                    <strong>Rumus Momentum Relativistik:</strong>
+                    $$ p = m v = \gamma m_0 v $$
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg text-center overflow-x-auto">
+                    <strong>Hubungan Energi & Momentum:</strong>
+                    $$ E^2 = (pc)^2 + (m_0 c^2)^2 $$
+                </div>
+                <p class="mt-4 text-xs text-gray-600">Partikel tanpa massa diam (seperti foton cahaya) memiliki momentum $p = \frac{E}{c}$ karena $m_0 = 0$.</p>
+            </section>
+
+        <!-- Parallax Divider 4 -->
+        <div class="space-divider">
+            <svg width="300" height="50" viewBox="0 0 300 50" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="150" cy="25" r="15" fill="none" stroke="#38bdf8" stroke-width="0.8" opacity="0.3">
+                    <animate attributeName="r" values="10;20;10" dur="3s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- BAB 6 -->
+        <section id="bab6" class="content-card rounded-2xl p-6 md:p-8 shadow-sm scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><span class="highlight">Bab 6 — Paradoks dan Aplikasi</span></h2>
+            <!-- SVG: Satellite orbiting Earth -->
+            <div class="flex justify-center mb-4 reveal reveal-delay-1">
+                <svg width="200" height="120" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs><radialGradient id="earthG"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#1a237e"/></radialGradient></defs>
+                    <circle cx="150" cy="100" r="35" fill="url(#earthG)"/>
+                    <ellipse cx="150" cy="100" rx="80" ry="25" fill="none" stroke="#6366f1" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+                    <g class="svg-satellite-orbit"><rect x="226" y="96" width="8" height="8" rx="2" fill="#ffb300"/><line x1="222" y1="100" x2="238" y2="100" stroke="#ffb300" stroke-width="1"/></g>
+                </svg>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-center">
+                <div class="bg-primary text-white rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-secondary mb-2"><i class="fa-solid fa-user-astronaut"></i> Twin Paradox (Paradoks Kembar)</h3>
+                    <p class="text-sm opacity-90 mb-4">Terdapat si kembar A dan B. A berkelana ke luar angkasa dengan roket berkecepatan mendekati $c$, sementara B tetap di bumi.</p>
+                    <p class="text-sm font-semibold bg-white/20 p-3 rounded-lg border border-white/30">Karena efek dilatasi waktu, saat A kembali ke bumi, A mendapati dirinya <strong>jauh lebih muda</strong> dibandingkan B yang kini sudah tua renta.</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary text-primary flex items-center justify-center font-bold text-xl flex-shrink-0"><i class="fa-solid fa-satellite"></i></div>
+                        <div>
+                            <h4 class="font-bold text-dark">Sistem Navigasi GPS</h4>
+                            <p class="text-sm text-gray-600">Satelit GPS bergerak relatif cepat terhadap bumi dan berada di zona gravitasi lebih lemah. Tanpa perhitungan koreksi waktu relativitas, koordinat GPS akan meleset belasan kilometer setiap hari.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-secondary text-primary flex items-center justify-center font-bold text-xl flex-shrink-0"><i class="fa-solid fa-atom"></i></div>
+                        <div>
+                            <h4 class="font-bold text-dark">Peluruhan Muon Kosmik</h4>
+                            <p class="text-sm text-gray-600">Partikel muon dari atmosfer memiliki umur amat singkat (2.2 µs). Logikanya ia akan musnah sebelum menyentuh bumi. Namun, karena ia bergerak ~0.99c, terjadi dilatasi waktu, memberinya cukup 'waktu' untuk sampai ke detektor di bumi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERAKTIF: KALKULATOR -->
+        <section id="interaktif" class="content-card rounded-2xl p-6 md:p-8 shadow-sm border-t-8 border-secondary scroll-mt-20 reveal">
+            <h2 class="text-3xl font-bold text-primary mb-2"><i class="fa-solid fa-calculator text-secondary"></i> Kalkulator Relativistik</h2>
+            <p class="text-gray-600 mb-6">Hitung besaran relativistik secara real-time. Sesuaikan input di bawah ini:</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Inputs -->
+                <div class="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <div>
+                        <label class="block text-sm font-bold text-dark mb-1">Kecepatan Objek ($v$) dalam persentase $c$:</label>
+                        <div class="flex gap-4 items-center">
+                            <input type="range" id="calc-v-slider" min="0" max="99.9" step="0.1" value="80" class="w-full">
+                            <span class="font-bold text-primary w-16 text-right"><span id="calc-v-disp">80</span>%</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Sama dengan <span id="calc-v-dec">0.8</span> $c$</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-dark mb-1">Waktu Awal/Proper ($t_0$) dalam sekon:</label>
+                        <input type="number" id="calc-t0" value="10" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-dark mb-1">Panjang Awal/Proper ($L_0$) dalam meter:</label>
+                        <input type="number" id="calc-l0" value="100" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-dark mb-1">Massa Diam ($m_0$) dalam kg:</label>
+                        <input type="number" id="calc-m0" value="1" class="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary">
+                    </div>
+                </div>
+
+                <!-- Outputs -->
+                <div class="bg-primary text-white p-6 rounded-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl"><i class="fa-solid fa-square-root-variable"></i></div>
+                    <h3 class="font-bold text-secondary text-xl mb-4 border-b border-white/20 pb-2 z-10 relative">Hasil Real-time</h3>
+                    <div class="space-y-3 relative z-10">
+                        <div class="flex justify-between items-center bg-white/10 p-2 rounded">
+                            <span>Faktor Lorentz ($\gamma$):</span>
+                            <strong class="text-xl text-secondary" id="res-gamma">1.667</strong>
+                        </div>
+                        <div class="flex justify-between items-center bg-white/10 p-2 rounded">
+                            <span>Waktu Teramati ($t$):</span>
+                            <strong class="text-lg"><span id="res-t">16.67</span> s</strong>
+                        </div>
+                        <div class="flex justify-between items-center bg-white/10 p-2 rounded">
+                            <span>Panjang Teramati ($L$):</span>
+                            <strong class="text-lg"><span id="res-l">60.00</span> m</strong>
+                        </div>
+                        <div class="flex justify-between items-center bg-white/10 p-2 rounded">
+                            <span>Massa Relativistik ($m$):</span>
+                            <strong class="text-lg"><span id="res-m">1.667</span> kg</strong>
+                        </div>
+                        <div class="flex justify-between items-center bg-white/10 p-2 rounded">
+                            <span>Energi Total ($E$):</span>
+                            <div class="text-right">
+                                <strong class="text-lg block"><span id="res-e-j">1.50e+17</span> J</strong>
+                                <span class="text-xs text-gray-300">~<span id="res-e-mev">9.38e+29</span> MeV</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="mt-8 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                <h4 class="text-center font-bold text-sm text-gray-600 mb-2">Grafik Faktor Lorentz ($\gamma$) vs $v/c$</h4>
+                <div style="height: 250px; width: 100%;">
+                    <canvas id="gammaChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- RANGKUMAN & MIND MAP -->
+        <section class="content-card rounded-2xl p-6 md:p-8 shadow-sm reveal">
+            <h2 class="text-3xl font-bold text-primary mb-6"><i class="fa-solid fa-sitemap text-secondary"></i> Peta Konsep & Kartu Rumus</h2>
+            
+            <!-- SVG Mind Map -->
+            <div class="w-full overflow-x-auto bg-gray-50 rounded-xl p-4 border border-gray-200 flex justify-center mb-8">
+                <svg width="600" height="300" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto">
+                    <!-- Lines -->
+                    <path d="M 300 60 L 300 120" stroke="#1a237e" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+                    <path d="M 300 120 L 120 180" stroke="#1a237e" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+                    <path d="M 300 120 L 300 180" stroke="#1a237e" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+                    <path d="M 300 120 L 480 180" stroke="#1a237e" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#1a237e" />
+                        </marker>
+                    </defs>
+                    <!-- Nodes -->
+                    <rect x="200" y="20" width="200" height="40" rx="10" fill="#1a237e" />
+                    <text x="300" y="45" font-family="Inter" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Teori Relativitas Khusus</text>
+                    
+                    <rect x="230" y="100" width="140" height="30" rx="5" fill="#ffb300" />
+                    <text x="300" y="120" font-family="Inter" font-size="12" font-weight="bold" fill="#2f3640" text-anchor="middle">2 Postulat Einstein</text>
+
+                    <rect x="50" y="180" width="140" height="40" rx="10" fill="#f8fafc" stroke="#1a237e" stroke-width="2"/>
+                    <text x="120" y="205" font-family="Inter" font-size="12" font-weight="bold" fill="#1a237e" text-anchor="middle">Dilatasi Waktu</text>
+
+                    <rect x="230" y="180" width="140" height="40" rx="10" fill="#f8fafc" stroke="#1a237e" stroke-width="2"/>
+                    <text x="300" y="205" font-family="Inter" font-size="12" font-weight="bold" fill="#1a237e" text-anchor="middle">Kontraksi Panjang</text>
+
+                    <rect x="410" y="180" width="140" height="40" rx="10" fill="#f8fafc" stroke="#1a237e" stroke-width="2"/>
+                    <text x="480" y="205" font-family="Inter" font-size="12" font-weight="bold" fill="#1a237e" text-anchor="middle">Massa - Energi (E=mc²)</text>
+                </svg>
+            </div>
+
+            <p class="text-center font-bold text-gray-600 mb-4">Arahkan kursor / Tap pada kartu untuk melihat rumus</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 perspective-1000">
+                <!-- Card 1 -->
+                <div class="group h-32 w-full perspective-1000 cursor-pointer">
+                    <div class="relative h-full w-full rounded-xl shadow-md transition-all duration-500 transform-style-3d group-hover:rotate-y-180">
+                        <div class="absolute inset-0 bg-primary text-white flex items-center justify-center rounded-xl backface-hidden">
+                            <span class="font-bold text-center">Faktor Lorentz ($\gamma$)</span>
+                        </div>
+                        <div class="absolute inset-0 bg-secondary text-dark flex flex-col items-center justify-center rounded-xl backface-hidden rotate-y-180 px-2 text-center text-sm">
+                            <span class="font-bold">$\gamma = \frac{1}{\sqrt{1 - v^2/c^2}}$</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="group h-32 w-full perspective-1000 cursor-pointer">
+                    <div class="relative h-full w-full rounded-xl shadow-md transition-all duration-500 transform-style-3d group-hover:rotate-y-180">
+                        <div class="absolute inset-0 bg-primary text-white flex items-center justify-center rounded-xl backface-hidden">
+                            <span class="font-bold text-center">Dilatasi Waktu</span>
+                        </div>
+                        <div class="absolute inset-0 bg-secondary text-dark flex flex-col items-center justify-center rounded-xl backface-hidden rotate-y-180 px-2 text-center text-sm">
+                            <span class="font-bold">$\Delta t = \gamma \Delta t_0$</span>
+                            <span class="text-xs mt-1">Waktu memuai</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="group h-32 w-full perspective-1000 cursor-pointer">
+                    <div class="relative h-full w-full rounded-xl shadow-md transition-all duration-500 transform-style-3d group-hover:rotate-y-180">
+                        <div class="absolute inset-0 bg-primary text-white flex items-center justify-center rounded-xl backface-hidden">
+                            <span class="font-bold text-center">Kontraksi Panjang</span>
+                        </div>
+                        <div class="absolute inset-0 bg-secondary text-dark flex flex-col items-center justify-center rounded-xl backface-hidden rotate-y-180 px-2 text-center text-sm">
+                            <span class="font-bold">$L = \frac{L_0}{\gamma}$</span>
+                            <span class="text-xs mt-1">Panjang memendek</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="group h-32 w-full perspective-1000 cursor-pointer">
+                    <div class="relative h-full w-full rounded-xl shadow-md transition-all duration-500 transform-style-3d group-hover:rotate-y-180">
+                        <div class="absolute inset-0 bg-primary text-white flex items-center justify-center rounded-xl backface-hidden">
+                            <span class="font-bold text-center">Energi Total</span>
+                        </div>
+                        <div class="absolute inset-0 bg-secondary text-dark flex flex-col items-center justify-center rounded-xl backface-hidden rotate-y-180 px-2 text-center text-sm">
+                            <span class="font-bold">$E = mc^2$</span>
+                            <span class="text-xs mt-1">$E = \gamma m_0 c^2$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERAKTIF: KUIS -->
+        <section id="kuis" class="content-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 reveal">
+            <div class="flex justify-between items-center mb-4 border-b pb-4">
+                <h2 class="text-2xl font-bold text-primary"><i class="fa-solid fa-clipboard-check text-secondary"></i> Uji Kompetensi (Kuis)</h2>
+                <div class="text-sm font-bold bg-indigo-100 text-primary px-3 py-1 rounded-full border border-indigo-200" id="quiz-counter">Soal 1/15</div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 overflow-hidden">
+                <div id="quiz-progress" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Quiz Container -->
+            <div id="quiz-container">
+                <div id="quiz-question-text" class="text-lg md:text-xl font-medium text-dark mb-6 min-h-[60px]"></div>
+                <div id="quiz-options" class="space-y-3 mb-8">
+                    <!-- Options injected by JS -->
+                </div>
+                <div class="flex justify-between">
+                    <button id="btn-submit-quiz" onclick="submitAnswer()" class="bg-secondary text-dark font-bold py-3 px-8 rounded-lg hover:bg-yellow-500 transition-colors shadow-sm hidden">Konfirmasi Jawaban</button>
+                    <button id="btn-next-quiz" onclick="nextQuestion()" class="bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-800 transition-colors shadow-sm hidden ml-auto">Selanjutnya <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+                <div id="quiz-explanation" class="hidden mt-6 p-4 bg-blue-50 border-l-4 border-primary rounded-r text-sm text-gray-800"></div>
+            </div>
+
+            <!-- Result Container -->
+            <div id="quiz-result" class="hidden text-center py-8">
+                <i class="fa-solid fa-medal text-6xl text-secondary mb-4"></i>
+                <h3 class="text-2xl font-bold text-dark mb-2">Skor Akhir Anda:</h3>
+                <div class="text-5xl font-extrabold text-primary mb-6"><span id="final-score">0</span><span class="text-2xl text-gray-400">/100</span></div>
+                <p id="score-message" class="text-lg text-gray-600 mb-8"></p>
+                <button onclick="initQuiz()" class="bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-800 transition-colors shadow-sm"><i class="fa-solid fa-rotate-right"></i> Ulangi Kuis</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8 text-center border-t-4 border-secondary mt-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <h3 class="text-xl font-bold mb-2">Materi Fisika SMA - Teori Relativitas Khusus</h3>
+            <p class="text-gray-400 text-sm mb-4">Mendukung Kurikulum Merdeka Fase F</p>
+            <hr class="border-gray-700 mb-4">
+            <p class="text-sm text-gray-300">&copy; 2026 <strong>Tirtandro Meda, S.Pd. M.Pd.</strong></p>
+            <p class="text-sm text-gray-300">SMA Negeri 2 Wates, Kulon Progo, DIY.</p>
+        </div>
+    </footer>
+
+    <script>
+        /* === KONTRAKSI PANJANG ANIMASI === */
+        const speedSlider = document.getElementById('rocket-speed');
+        const speedDisplay = document.getElementById('speed-display');
+        const rocketBody = document.getElementById('rocket-body');
+        const lengthDisplay = document.getElementById('length-display');
+
+        speedSlider.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            speedDisplay.innerText = v + " c";
+            const gamma = 1 / Math.sqrt(1 - v*v);
+            const percentage = (1 / gamma) * 100;
+            
+            rocketBody.style.width = Math.max(percentage, 15) + "%"; // min width for visibility
+            lengthDisplay.innerText = percentage.toFixed(1);
+        });
+
+        /* === KALKULATOR RELATIVISTIK === */
+        const c = 3e8; // 3 x 10^8 m/s
+        const calcV = document.getElementById('calc-v-slider');
+        const calcT0 = document.getElementById('calc-t0');
+        const calcL0 = document.getElementById('calc-l0');
+        const calcM0 = document.getElementById('calc-m0');
+        let myChart = null;
+
+        function updateCalc() {
+            let v_pct = parseFloat(calcV.value);
+            let v = v_pct / 100;
+            let t0 = parseFloat(calcT0.value) || 0;
+            let l0 = parseFloat(calcL0.value) || 0;
+            let m0 = parseFloat(calcM0.value) || 0;
+
+            document.getElementById('calc-v-disp').innerText = v_pct;
+            document.getElementById('calc-v-dec').innerText = v.toFixed(3);
+
+            let gamma = 1 / Math.sqrt(1 - v*v);
+            
+            document.getElementById('res-gamma').innerText = gamma.toFixed(4);
+            document.getElementById('res-t').innerText = (gamma * t0).toFixed(2);
+            document.getElementById('res-l').innerText = (l0 / gamma).toFixed(2);
+            document.getElementById('res-m').innerText = (gamma * m0).toFixed(4);
+            
+            let E_joule = gamma * m0 * c * c;
+            let E_mev = E_joule / (1.60218e-13); // 1 MeV = 1.60218e-13 J
+
+            document.getElementById('res-e-j').innerText = E_joule.toExponential(2);
+            document.getElementById('res-e-mev').innerText = E_mev.toExponential(2);
+        }
+
+        calcV.addEventListener('input', updateCalc);
+        calcT0.addEventListener('input', updateCalc);
+        calcL0.addEventListener('input', updateCalc);
+        calcM0.addEventListener('input', updateCalc);
+
+        // Chart.js Init
+        function initChart() {
+            const ctx = document.getElementById('gammaChart').getContext('2d');
+            const dataV = [];
+            const dataGamma = [];
+            for(let i=0; i<=99; i+=2) {
+                let v = i/100;
+                dataV.push(v);
+                dataGamma.push(1/Math.sqrt(1 - v*v));
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dataV,
+                    datasets: [{
+                        label: 'Faktor Lorentz (γ)',
+                        data: dataGamma,
+                        borderColor: '#ffb300',
+                        backgroundColor: 'rgba(255, 179, 0, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { title: { display: true, text: 'Kecepatan (v/c)' } },
+                        y: { title: { display: true, text: 'γ' }, suggestedMax: 10 }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        /* === KUIS INTERAKTIF LOGIC === */
+        // Raw Data (Level L1, L2, L3)
+        const rawQuizData = [
+            { q: "Siapa ilmuwan yang mempublikasikan Teori Relativitas Khusus pada tahun 1905?", o: ["Galileo Galilei", "Isaac Newton", "Albert Einstein", "James Clerk Maxwell"], a: 2, exp: "Albert Einstein mempublikasikan teori ini melalui makalahnya 'On the Electrodynamics of Moving Bodies'." },
+            { q: "Postulat kedua relativitas khusus berbunyi...", o: ["Waktu berjalan sama untuk semua pengamat", "Kecepatan cahaya konstan di ruang hampa untuk semua pengamat", "Massa benda bersifat mutlak", "Hukum Newton berlaku mutlak di semua kerangka"], a: 1, exp: "Kecepatan cahaya ($c$) selalu $3 \\times 10^8$ m/s, tidak dipengaruhi gerak sumber maupun pengamat." },
+            { q: "Percobaan yang membuktikan kegagalan konsep ether adalah...", o: ["Eksperimen Celaha Ganda Young", "Eksperimen Tetes Minyak Millikan", "Eksperimen Michelson-Morley", "Eksperimen Rutherford"], a: 2, exp: "Michelson & Morley membuktikan bahwa tidak ada 'angin ether' dan kecepatan cahaya konstan di segala arah." },
+            { q: "Sebuah roket bergerak dengan kecepatan $0.6c$. Besarnya faktor Lorentz ($\gamma$) adalah...", o: ["0.8", "1.25", "1.5", "2.0"], a: 1, exp: "$\\gamma = \\frac{1}{\\sqrt{1 - 0.6^2}} = \\frac{1}{0.8} = 1.25$." },
+            { q: "Fenomena pemuluran waktu akibat kecepatan mendekati kecepatan cahaya disebut...", o: ["Kontraksi Panjang", "Dilatasi Waktu", "Relativitas Massa", "Efek Doppler"], a: 1, exp: "Dilatasi (pemuluran) waktu terjadi karena pengamat diam melihat waktu pada objek yang bergerak berjalan lebih lambat." },
+            { q: "Pesawat A bergerak dengan kecepatan $0.8c$ meninggalkan bumi. Waktu yang dicatat oleh astronot dalam pesawat adalah 6 tahun. Berapa waktu yang berlalu di bumi?", o: ["3.6 tahun", "6 tahun", "8 tahun", "10 tahun"], a: 3, exp: "$\\Delta t = \\gamma \\Delta t_0$. $\\gamma = 1/0.6 = 5/3$. $\\Delta t = (5/3) \\times 6 = 10$ tahun." },
+            { q: "Sebuah mistar yang panjang aslinya 1 meter bergerak dengan kecepatan $0.6c$. Panjang mistar menurut pengamat diam adalah...", o: ["0.64 m", "0.8 m", "1.0 m", "1.25 m"], a: 1, exp: "Kontraksi panjang $L = L_0 / \\gamma$. $\\gamma = 1.25$. $L = 1 / 1.25 = 0.8$ meter." },
+            { q: "Jika sebuah benda bergerak makin cepat mendekati $c$, massa relativistik benda tersebut akan...", o: ["Tetap konstan", "Berkurang menjadi nol", "Membesar menuju tak terhingga", "Menjadi energi kinetik seutuhnya"], a: 2, exp: "Karena $m = \\gamma m_0$ dan $\\gamma$ mendekati tak terhingga saat $v \\to c$, maka massanya juga membesar menuju tak terhingga." },
+            { q: "Rumus energi diam (Rest Energy) yang benar adalah...", o: ["$E = mc^2$", "$E = \\gamma m_0 c^2$", "$E = m_0 c^2$", "$E = \\frac{1}{2} m_0 c^2$"], a: 2, exp: "Energi diam adalah energi yang dimiliki benda saat ia tidak bergerak ($v=0, \\gamma=1$), yaitu $E_0 = m_0 c^2$." },
+            { q: "Sebuah partikel memiliki energi total sama dengan 2 kali energi diamnya. Kecepatan partikel tersebut adalah...", o: ["$\\frac{1}{2}c$", "$\\frac{1}{2}\\sqrt{3}c$", "$\\frac{1}{3}c$", "$\\frac{1}{2}\\sqrt{2}c$"], a: 1, exp: "$E = 2 E_0 \\Rightarrow \\gamma m_0 c^2 = 2 m_0 c^2 \\Rightarrow \\gamma = 2$. Dari rumus $\\gamma$, $2 = 1/\\sqrt{1-v^2/c^2} \\Rightarrow 1-v^2/c^2 = 1/4 \\Rightarrow v^2/c^2 = 3/4 \\Rightarrow v = \\frac{1}{2}\\sqrt{3}c$." },
+            { q: "Energi kinetik relativistik didefinisikan sebagai...", o: ["$E_{total} - E_{diam}$", "$\\frac{1}{2} m_0 v^2$", "$m c^2 + m_0 c^2$", "$E_{total} / \\gamma$"], a: 0, exp: "Energi kinetik relativistik adalah selisih energi total dengan energi diam: $EK = E - E_0 = (\\gamma - 1)m_0 c^2$." },
+            { q: "Paradoks kembar adalah ilustrasi untuk fenomena...", o: ["Massa relativistik", "Kontraksi panjang", "Efek fotolistrik", "Dilatasi waktu"], a: 3, exp: "Paradoks kembar menceritakan perbedaan umur akibat dilatasi waktu antara si kembar yang diam di bumi dan yang bepergian dengan kecepatan tinggi." },
+            { q: "Sistem navigasi berikut sangat bergantung pada koreksi relativitas khusus dan umum agar tetap akurat:", o: ["Radar Kapal", "Sonar Kapal Selam", "Global Positioning System (GPS)", "Radio AM/FM"], a: 2, exp: "Satelit GPS bergerak cepat dan berada di medan gravitasi yang berbeda, sehingga tanpa koreksi relativistik akan terjadi kesalahan jarak yang fatal." },
+            { q: "Momentum relativistik dirumuskan dengan...", o: ["$p = m_0 v$", "$p = \\gamma m_0 v$", "$p = \\frac{1}{2} \\gamma m_0 v^2$", "$p = \\gamma m_0 c^2$"], a: 1, exp: "Momentum didefinisikan sebagai $p = mv$, karena massanya relativistik ($m = \\gamma m_0$), maka $p = \\gamma m_0 v$." },
+            { q: "Bukti nyata dilatasi waktu yang terbentuk di atmosfer atas bumi akibat sinar kosmik dan dapat dideteksi di permukaan laut adalah...", o: ["Peluruhan partikel Muon", "Efek Compton", "Sinar X", "Aurora Borealis"], a: 0, exp: "Muon kosmik berumur sangat pendek (mikrosekon). Tanpa dilatasi waktu akibat kecepatan tingginya, mereka tidak akan sempat mencapai detektor di permukaan bumi." }
+        ];
+
+        let quizQuestions = [];
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let selectedOptionIdx = -1;
+
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                let tmp = array[curId];
+                array[curId] = array[randId];
+                array[randId] = tmp;
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            quizQuestions = shuffleArray([...rawQuizData]); // Copy and shuffle
+            currentQuestionIdx = 0;
+            score = 0;
+            
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            selectedOptionIdx = -1;
+            document.getElementById('btn-submit-quiz').classList.remove('hidden');
+            document.getElementById('btn-submit-quiz').disabled = true;
+            document.getElementById('btn-submit-quiz').classList.replace('bg-secondary', 'bg-gray-300');
+            document.getElementById('btn-submit-quiz').classList.replace('text-dark', 'text-gray-500');
+            
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+            document.getElementById('quiz-explanation').classList.add('hidden');
+
+            const q = quizQuestions[currentQuestionIdx];
+            document.getElementById('quiz-counter').innerText = `Soal ${currentQuestionIdx + 1} / ${quizQuestions.length}`;
+            
+            // Progress bar update
+            const progress = (currentQuestionIdx / quizQuestions.length) * 100;
+            document.getElementById('quiz-progress').style.width = `${progress}%`;
+
+            document.getElementById('quiz-question-text').innerHTML = `${currentQuestionIdx + 1}. ${q.q}`;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            q.o.forEach((optText, index) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'quiz-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer text-gray-700 bg-gray-50';
+                optDiv.innerHTML = `<span class="font-bold mr-2">${String.fromCharCode(65 + index)}.</span> ${optText}`;
+                optDiv.onclick = () => selectOption(index, optDiv);
+                optionsContainer.appendChild(optDiv);
+            });
+
+            // Re-render MathJax
+            if(window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function selectOption(index, element) {
+            if(!document.getElementById('btn-next-quiz').classList.contains('hidden')) return; // Already answered
+
+            selectedOptionIdx = index;
+            const options = document.getElementById('quiz-options').children;
+            for(let opt of options) {
+                opt.classList.remove('selected', 'bg-c7d2fe', 'border-1a237e');
+            }
+            element.classList.add('selected');
+
+            // Enable submit
+            const btn = document.getElementById('btn-submit-quiz');
+            btn.disabled = false;
+            btn.classList.replace('bg-gray-300', 'bg-secondary');
+            btn.classList.replace('text-gray-500', 'text-dark');
+        }
+
+        function submitAnswer() {
+            if(selectedOptionIdx === -1) return;
+
+            const q = quizQuestions[currentQuestionIdx];
+            const options = document.getElementById('quiz-options').children;
+            const isCorrect = (selectedOptionIdx === q.a);
+
+            if(isCorrect) {
+                score++;
+                options[selectedOptionIdx].classList.add('correct');
+            } else {
+                options[selectedOptionIdx].classList.add('wrong');
+                options[q.a].classList.add('correct'); // Show correct answer
+            }
+
+            document.getElementById('btn-submit-quiz').classList.add('hidden');
+            
+            // Show explanation
+            const expDiv = document.getElementById('quiz-explanation');
+            expDiv.innerHTML = `<strong>Pembahasan:</strong><br>${q.exp}`;
+            expDiv.classList.remove('hidden');
+
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+            
+            if(window.MathJax) { MathJax.typesetPromise([expDiv]); }
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            if(currentQuestionIdx < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('quiz-progress').style.width = `100%`;
+
+            const finalScore = Math.round((score / quizQuestions.length) * 100);
+            document.getElementById('final-score').innerText = finalScore;
+
+            let message = "";
+            if(finalScore >= 85) message = "Luar Biasa! Pemahaman Anda tentang Relativitas sangat mantap.";
+            else if(finalScore >= 70) message = "Bagus! Anda memahami konsep dasar dengan baik.";
+            else message = "Jangan menyerah! Silakan pelajari kembali materi di atas dan coba lagi.";
+            
+            document.getElementById('score-message').innerText = message;
+        }
+
+        // Initialize on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCalc();
+            initChart();
+            initQuiz();
+        });
+    </script>
+    <script src="enhancements.js"></script>
+</body>
+</html>
