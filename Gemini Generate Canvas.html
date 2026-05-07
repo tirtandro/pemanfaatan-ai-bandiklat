@@ -964,13 +964,12 @@
                 return;
             }
 
-            // Menggunakan fetch dengan mode no-cors untuk menghindari masalah pre-flight
-            fetch(finalURL, {
-                method: 'GET',
-                mode: 'no-cors'
-            })
-            .then(() => console.log("Data berhasil dikirim ke Spreadsheet (via GET)"))
-            .catch(error => console.error('Error!', error.message));
+            // Teknik "Invisible Image" - Paling ampuh untuk tembus CORS/Redirect dari file lokal
+            const img = new Image();
+            img.src = finalURL;
+            
+            img.onload = () => console.log("Data berhasil terkirim ke Spreadsheet!");
+            img.onerror = () => console.log("Data dikirim (status redirect diabaikan)");
         }
 
         // Initialize on Load
