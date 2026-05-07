@@ -610,27 +610,51 @@
 
         <!-- INTERAKTIF: KUIS -->
         <section id="kuis" class="content-card rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200 reveal">
-            <div class="flex justify-between items-center mb-4 border-b pb-4">
-                <h2 class="text-2xl font-bold text-primary"><i class="fa-solid fa-clipboard-check text-secondary"></i> Uji Kompetensi (Kuis)</h2>
-                <div class="text-sm font-bold bg-indigo-100 text-primary px-3 py-1 rounded-full border border-indigo-200" id="quiz-counter">Soal 1/15</div>
+            <!-- Quiz Intro (Registration) -->
+            <div id="quiz-intro" class="text-center py-8">
+                <i class="fa-solid fa-user-graduate text-6xl text-primary mb-4"></i>
+                <h3 class="text-2xl font-bold text-dark mb-4">Data Peserta</h3>
+                <p class="text-gray-600 mb-6 italic text-sm">Silakan lengkapi data diri sebelum memulai kuis</p>
+                <div class="max-w-sm mx-auto space-y-4">
+                    <input type="text" id="user-name" placeholder="Nama Lengkap" class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:outline-none transition-all">
+                    <select id="user-class" class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:outline-none transition-all">
+                        <option value="" disabled selected>Pilih Kelas</option>
+                        <option value="XII A">XII A</option>
+                        <option value="XII B">XII B</option>
+                        <option value="XII C">XII C</option>
+                        <option value="XII D">XII D</option>
+                        <option value="XII E">XII E</option>
+                    </select>
+                    <button onclick="startQuizFlow()" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-indigo-800 transition-all shadow-md mt-4">
+                        Mulai Mengerjakan <i class="fa-solid fa-play ml-2"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 overflow-hidden">
-                <div id="quiz-progress" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-            </div>
+            <!-- Quiz Header & Progress (Hidden at start) -->
+            <div id="quiz-main" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-primary"><i class="fa-solid fa-clipboard-check text-secondary"></i> Uji Kompetensi (Kuis)</h2>
+                    <div class="text-sm font-bold bg-indigo-100 text-primary px-3 py-1 rounded-full border border-indigo-200" id="quiz-counter">Soal 1/15</div>
+                </div>
 
-            <!-- Quiz Container -->
-            <div id="quiz-container">
-                <div id="quiz-question-text" class="text-lg md:text-xl font-medium text-dark mb-6 min-h-[60px]"></div>
-                <div id="quiz-options" class="space-y-3 mb-8">
-                    <!-- Options injected by JS -->
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 overflow-hidden">
+                    <div id="quiz-progress" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
-                <div class="flex justify-between">
-                    <button id="btn-submit-quiz" onclick="submitAnswer()" class="bg-secondary text-dark font-bold py-3 px-8 rounded-lg hover:bg-yellow-500 transition-colors shadow-sm hidden">Konfirmasi Jawaban</button>
-                    <button id="btn-next-quiz" onclick="nextQuestion()" class="bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-800 transition-colors shadow-sm hidden ml-auto">Selanjutnya <i class="fa-solid fa-arrow-right"></i></button>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container">
+                    <div id="quiz-question-text" class="text-lg md:text-xl font-medium text-dark mb-6 min-h-[60px]"></div>
+                    <div id="quiz-options" class="space-y-3 mb-8">
+                        <!-- Options injected by JS -->
+                    </div>
+                    <div class="flex justify-between">
+                        <button id="btn-submit-quiz" onclick="submitAnswer()" class="bg-secondary text-dark font-bold py-3 px-8 rounded-lg hover:bg-yellow-500 transition-colors shadow-sm hidden">Konfirmasi Jawaban</button>
+                        <button id="btn-next-quiz" onclick="nextQuestion()" class="bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-800 transition-colors shadow-sm hidden ml-auto">Selanjutnya <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                    <div id="quiz-explanation" class="hidden mt-6 p-4 bg-blue-50 border-l-4 border-primary rounded-r text-sm text-gray-800"></div>
                 </div>
-                <div id="quiz-explanation" class="hidden mt-6 p-4 bg-blue-50 border-l-4 border-primary rounded-r text-sm text-gray-800"></div>
             </div>
 
             <!-- Result Container -->
@@ -783,13 +807,33 @@
             return array;
         }
 
+        let userData = { name: "", class: "" };
+
+        function startQuizFlow() {
+            const nameInput = document.getElementById('user-name');
+            const classSelect = document.getElementById('user-class');
+            
+            if (!nameInput.value.trim() || !classSelect.value) {
+                alert("Harap isi Nama dan pilih Kelas terlebih dahulu!");
+                return;
+            }
+            
+            userData.name = nameInput.value.trim();
+            userData.class = classSelect.value;
+            
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-main').classList.remove('hidden');
+            
+            initQuiz();
+        }
+
         function initQuiz() {
             quizQuestions = shuffleArray([...rawQuizData]); // Copy and shuffle
             currentQuestionIdx = 0;
             score = 0;
             
             document.getElementById('quiz-result').classList.add('hidden');
-            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-main').classList.remove('hidden');
             
             loadQuestion();
         }
@@ -882,26 +926,60 @@
         }
 
         function showResult() {
-            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-main').classList.add('hidden');
             document.getElementById('quiz-result').classList.remove('hidden');
             document.getElementById('quiz-progress').style.width = `100%`;
 
             const finalScore = Math.round((score / quizQuestions.length) * 100);
             document.getElementById('final-score').innerText = finalScore;
 
+            const isPassed = finalScore >= 70;
             let message = "";
             if(finalScore >= 85) message = "Luar Biasa! Pemahaman Anda tentang Relativitas sangat mantap.";
             else if(finalScore >= 70) message = "Bagus! Anda memahami konsep dasar dengan baik.";
             else message = "Jangan menyerah! Silakan pelajari kembali materi di atas dan coba lagi.";
             
             document.getElementById('score-message').innerText = message;
+            
+            // Auto Submit to Spreadsheet
+            submitToSpreadsheet(finalScore, isPassed);
+        }
+
+        function submitToSpreadsheet(finalScore, isPassed) {
+            // URL Google Apps Script Web App (User perlu mengganti ini)
+            const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+            
+            const data = {
+                timestamp: new Date().toLocaleString(),
+                nama: userData.name,
+                kelas: userData.class,
+                skor: finalScore,
+                keterangan: isPassed ? "LULUS" : "TIDAK LULUS"
+            };
+
+            console.log("Submitting Result:", data);
+
+            if (scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                console.warn("Spreadsheet URL belum dikonfigurasi. Data tidak terkirim secara nyata.");
+                return;
+            }
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // Penting untuk Apps Script
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(() => console.log("Success submitting to spreadsheet"))
+            .catch(error => console.error('Error!', error.message));
         }
 
         // Initialize on Load
         window.addEventListener('DOMContentLoaded', () => {
             updateCalc();
             initChart();
-            initQuiz();
+            // initQuiz() dipanggil setelah startQuizFlow()
         });
     </script>
     <script src="enhancements.js"></script>
